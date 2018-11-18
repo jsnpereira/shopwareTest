@@ -1,0 +1,8 @@
+target/*
+chromedriver
+/target/
+test-output/
+.classpath
+src/test/resources/DRIVERS/*
+.settings/
+src/test/resources/logs/*
