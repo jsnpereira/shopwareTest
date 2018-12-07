@@ -26,6 +26,15 @@ public class APIClient {
 		return response.getEntity(String.class);
 	}
 	
+	public String post(String url, String body, HTTPBasicAuthFilter auth) {
+		Client client = Client.create();
+		client.addFilter(auth);
+		QALogger.info("Path delete: "+url);
+		WebResource webResource = client.resource(url);
+		response = webResource.post(ClientResponse.class,body);
+		return response.getEntity(String.class);
+	}
+	
 	public String getStatusCode() {
 		return String.valueOf(response.getStatus());
 	}

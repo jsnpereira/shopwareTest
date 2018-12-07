@@ -21,18 +21,21 @@ public class CustomerPage extends SeleniumPage implements CustomerPageConstansts
 	private static String CITY_INPUT_ID = "city";
 	private static String COUNTRY_DROPDOWN_XPATH = ".//select[@id='country']";
 	private static String CONTINUE_BUTTON_XPATH = ".//button[contains(@class, 'register--submit')]";
-	private static String SHIPING_ADDRESS_CHECK_ID = "register_billing_shippingAddress";
+//	private static String SHIPING_ADDRESS_CHECK_ID = "register_billing_shippingAddress";
 	private static String SELECT_UK_OPTION_DROPDOWN_XPATH = ".//select[@id='country']/option[@value='11']";
+	private static String USER_EMAIL_INPUT_ID = "email";
+	private static String USER_PWD_INPUT_ID = "passwort";
+	private static String SIGNIN_LOGIN_BUTTON_XPATH =".//button[contains(@class,'register--login-btn')]";
 
 	public Boolean checkPageIsDisplay() {
-		QALogger.info("Start :" + Thread.currentThread().getStackTrace()[1].getMethodName());
+		QALogger.info("==============Start: " + Thread.currentThread().getStackTrace()[1].getMethodName()+"====================");
 		isPass = true;
 		String titleName = getBrowserTitle();
 		if (!titleName.equals(TITLE_NAME_PAGE)) {
 			isPass = false;
 		}
 		QALogger.info("Tile name: '" + titleName + "' => '" + TITLE_NAME_PAGE + "', isPass: " + isPass);
-		QALogger.info("END :" + Thread.currentThread().getStackTrace()[1].getMethodName());
+		QALogger.info("==============END: " + Thread.currentThread().getStackTrace()[1].getMethodName()+"======================");
 		return isPass;
 	}
 
@@ -52,6 +55,12 @@ public class CustomerPage extends SeleniumPage implements CustomerPageConstansts
 		super.Click(COUNTRY_DROPDOWN_XPATH, LocatorType.XPATH);
 		super.waitElementIsVisible(SELECT_UK_OPTION_DROPDOWN_XPATH, LocatorType.XPATH);
 		super.Click(SELECT_UK_OPTION_DROPDOWN_XPATH, LocatorType.XPATH);
+	}
+	
+	public void signIn(Customer_UI customer) {
+		super.Type(customer.getEmail(), USER_EMAIL_INPUT_ID, LocatorType.ID);
+		super.Type(customer.getPassword(), USER_PWD_INPUT_ID, LocatorType.ID);
+		super.Click(SIGNIN_LOGIN_BUTTON_XPATH, LocatorType.XPATH);
 	}
 
 	public void action(ActionCustomer action) {

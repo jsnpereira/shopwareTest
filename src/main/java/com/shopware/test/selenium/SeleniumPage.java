@@ -1,10 +1,15 @@
 package com.shopware.test.selenium;
 
+import java.net.URL;
+
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -15,10 +20,10 @@ import com.shopware.test.utils.QALogger;
 public class SeleniumPage {
 	private static WebDriver driver;
 	private WebElement element;
-	private static String DRIVERS_FOLDER = "/src/main/resources/DRIVERS";
+//	private static String DRIVERS_FOLDER = "/src/main/resources/DRIVERS";
 
-	public void browser(Browser browser) {
-		QALogger.info("Browser: " + browser.getBrowserName());
+	public void browser(String browser) throws Exception {
+		QALogger.info("Browser: " + browser);
 		driver = setUpBrowser(browser);
 	}
 
@@ -34,11 +39,6 @@ public class SeleniumPage {
 		waitPageLoaded();
 	}
 	
-	public void windowMaximize() {
-		QALogger.info("Windows maximized");
-		driver.manage().window().maximize();
-	}
-
 	public static void close() {
 		QALogger.info("Browser closed");
 		driver.close();
@@ -98,15 +98,6 @@ public class SeleniumPage {
 		element.click();
 	}
 
-	public void wait(int sleep) {
-		try {
-			Thread.sleep(sleep);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	public void selectValueDropDown(String value, String locator, LocatorType locatorType) {
 		Select dropDown = new Select(element = getElement(locator, locatorType));
 		dropDown.selectByVisibleText(value);
@@ -145,26 +136,56 @@ public class SeleniumPage {
 		wait.until(ExpectedConditions.visibilityOfElementLocated(Locator.get(locator, locatorType)));
 	}
  
-	public WebDriver setUpBrowser(Browser browser) {
-		String address;
+//	public WebDriver setUpBrowser(Browser browser) {
+//		String address;
+//		
+//		if (isWindows()) {
+//			address = System.getProperty("user.dir") + DRIVERS_FOLDER;
+//		} else {
+//			address = "/usr/bin";
+//		}
+//		
+//		QALogger.info("Address: " + address);
+//		switch (browser) {
+//		case Firefox:
+//			System.setProperty("webdriver.gecko.driver", address + "/geckodriver.exe");
+//			return new FirefoxDriver();
+//		case Chrome:
+//			System.setProperty("webdriver.chrome.driver", address + "/chromedriver");
+//			return new ChromeDriver();
+//		default:
+//			return null;
+//		}
+//	}
+	
+	public WebDriver setUpBrowser(String browser) throws Exception {
+		DesiredCapabilities dc = null;
 		
-		if (isWindows()) {
-			address = System.getProperty("user.dir") + DRIVERS_FOLDER;
-		} else {
-			address = "/usr/bin";
-		}
+//		String address;
+//		
+//		if (isWindows()) {
+//			address = System.getProperty("user.dir") + DRIVERS_FOLDER;
+//		} else {
+//			address = "/usr/bin";
+//		}
 		
-		QALogger.info("Address: " + address);
-		switch (browser) {
-		case Firefox:
-			System.setProperty("webdriver.gecko.driver", address + "/geckodriver.exe");
+		if (browser.equals("firefox")) {
+			dc = DesiredCapabilities.firefox();
+			return new RemoteWebDriver(new URL("http://172.17.0.4:5555/wd/hub"), dc);
+		} else if (browser.equals("chrome")) {
+			dc = DesiredCapabilities.chrome();
+			return new RemoteWebDriver(new URL("http://172.17.0.3:5555/wd/hub"), dc);
+		} else if (browser.equals("firefoxLoc")) {
+			System.setProperty("webdriver.gecko.driver", "geckodriver");
 			return new FirefoxDriver();
-		case Chrome:
-			System.setProperty("webdriver.chrome.driver", address + "/chromedriver");
-			return new ChromeDriver();
-		default:
-			return null;
+		} else if (browser.equals("chromeLoc")) {
+			ChromeOptions options = new ChromeOptions();
+			options.addArguments("--start-maximized");
+			System.setProperty("webdriver.chrome.driver", "chromedriver");
+			return new ChromeDriver(options);
 		}
+		
+		return null;
 	}
 
 	public Boolean isWindows() {

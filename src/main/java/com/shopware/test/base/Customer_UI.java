@@ -3,6 +3,8 @@ package com.shopware.test.base;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import com.shopware.test.utils.DataUtils;
 
 public class Customer_UI {
@@ -84,5 +86,25 @@ public class Customer_UI {
 
 	public void setCustomerType(String customerType) {
 		this.customerType = customerType;
+	}
+	
+	public JSONObject converToJSON() {
+		JSONObject jBilling = new JSONObject();
+		jBilling.put("firstname",addresses.get(0).getFirstName());
+		jBilling.put("lastname", addresses.get(0).getLastName());
+		jBilling.put("salutation", addresses.get(0).getSaluation().toLowerCase());
+		jBilling.put("street", addresses.get(0).getAddressLine());
+		jBilling.put("city", addresses.get(0).getCity());
+		jBilling.put("zipcode", addresses.get(0).getZipCode());
+		jBilling.put("country", 11);
+		
+		JSONObject jCustomer = new JSONObject();
+		jCustomer.put("salutation",this.salutation.toLowerCase());
+		jCustomer.put("firstname", this.firstName);
+		jCustomer.put("lastname", this.lastName);
+		jCustomer.put("email", this.email);
+		jCustomer.put("password", this.password);
+		jCustomer.put("billing", jBilling);
+		return jCustomer;
 	}
 }

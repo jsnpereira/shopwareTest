@@ -1,7 +1,5 @@
 package com.shopware.test.customer;
 
-import static org.testng.Assert.assertTrue;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.AssertJUnit;
@@ -28,20 +26,20 @@ public class Test_02_Create_Customer {
 	Customer_UI customerUI;
 
 	@Test(priority=1, description = "Launch home page")
-	public void launch() throws Exception {
-		homePage.nativationTo(HomePageConstansts.URL,Browser.Chrome);
+	public void test01() throws Exception {
+		homePage.navigationTo(HomePageConstansts.URL,Browser.Firefox.getBrowserName());
 		AssertJUnit.assertTrue(homePage.checkPageIsDisplay());
 	}
 	
 	@Test(priority=2, description = "Go to customer page and register new customer")
-	public void goCustomerPage()  {
+	public void test02()  {
 		homePage.actionUser(ActionCustomer.REGISTER);
-		homePage.redirectTo("/account");
+		homePage.redirectTo("#show-registration");
 		AssertJUnit.assertTrue(customerPage.checkPageIsDisplay());
 	}
 	
 	@Test(priority=3, description = "Create new customer on page")
-	public void createNewCustomer() {
+	public void test03() {
 		try {
 			customerUI = new Customer_UI();
 			customerPage.enterTextBoxCustomerRegister(customerUI);
@@ -81,7 +79,7 @@ public class Test_02_Create_Customer {
 			
 			api.deleteCustomer(HomePageConstansts.URL,String.valueOf(customerId));
 			QALogger.info("Status code: "+api.getStatusCode());
-			assertTrue(api.getStatusCode().equals("200"));
+			AssertJUnit.assertTrue(api.getStatusCode().equals("200"));
 		} catch (Exception e) {
 			QALogger.error("FAIELD: ", e);
 		}

@@ -1,7 +1,7 @@
 package com.shopware.test.selenium;
 
 public enum Browser {
-	Firefox("firefox"), Chrome("Chrome");
+	Firefox("firefox"), Chrome("chrome"), FirefoxLoc("firefoxLoc"), ChromeLoc("chromeLoc");
 
 	String browserName;
 
