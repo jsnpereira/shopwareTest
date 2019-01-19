@@ -1,4 +1,4 @@
-package com.shopware.test.base;
+package com.shopware.test.pages.base;
 
 import java.util.ArrayList;
 import java.util.List;

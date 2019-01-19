@@ -2,8 +2,9 @@ package com.shopware.test.pages;
 
 import org.openqa.selenium.WebElement;
 
-import com.shopware.test.base.CustomerAccountPageConstants;
-import com.shopware.test.base.Customer_UI;
+import com.shopware.test.pages.base.ActionCustomer;
+import com.shopware.test.pages.base.CustomerAccountPageConstants;
+import com.shopware.test.pages.base.Customer_UI;
 import com.shopware.test.selenium.LocatorType;
 import com.shopware.test.selenium.SeleniumPage;
 import com.shopware.test.utils.DataUtils;
@@ -12,6 +13,7 @@ import com.shopware.test.utils.QALogger;
 public class CustomerAccountPage extends SeleniumPage implements CustomerAccountPageConstants {
 	private Boolean isPass;
 	private static String PROFILE_DASHBOARD_XPATH = ".//div[contains(@class,'account--info')]/div[1]/p";
+	private static String CHANGE_PROFILE_BUTTON_XPATH = ".//div[contains(@class,'account--info')]/div[2]/a";
 	
 	public Boolean checkCustomerAccount() {
 		QALogger.info("==============Start: " + Thread.currentThread().getStackTrace()[1].getMethodName()+"====================");
@@ -41,6 +43,21 @@ public class CustomerAccountPage extends SeleniumPage implements CustomerAccount
 		QALogger.info("Email: "+profileDashboard[1]+" => "+customer.getEmail()+", isPass: "+isPass);
 		QALogger.info("==============End: " + Thread.currentThread().getStackTrace()[1].getMethodName()+"====================");
 		return isPass;
+	}
+	
+	public void action(ActionCustomer actionCustomer) {
+		switch (actionCustomer) {
+		case CHANGE_PROFILE:
+			clickChangeProfile();
+			break;
+		default:
+			break;
+		}
+		
+	}
+	
+	private void clickChangeProfile() {
+		super.Click(CHANGE_PROFILE_BUTTON_XPATH, LocatorType.XPATH);
 	}
 
 }

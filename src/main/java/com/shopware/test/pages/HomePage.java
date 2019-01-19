@@ -1,7 +1,7 @@
 package com.shopware.test.pages;
 
-import com.shopware.test.base.ActionCustomer;
-import com.shopware.test.base.HomePageConstansts;
+import com.shopware.test.pages.base.ActionCustomer;
+import com.shopware.test.pages.base.HomePageConstansts;
 import com.shopware.test.selenium.LocatorType;
 import com.shopware.test.selenium.SeleniumPage;
 import com.shopware.test.utils.QALogger;
@@ -17,12 +17,10 @@ public class HomePage extends SeleniumPage {
 	private String ACCOUNT_REGISTER_XPATH = ".//span[@class='navigation--register']/a";
 	private String ACCOUNT_SIGNIN_XPATH = ".//a[contains(@class,'navigation--signin-btn')]";
 
-	public void navigationTo(String url, String browser) throws Exception {
+	public void navigationTo() {
 		QALogger.info("==============Start: " + Thread.currentThread().getStackTrace()[1].getMethodName()+"====================");
-		QALogger.info("Navigation to '" + url + ", browser: " + browser);
-		super.browser(browser);
-		super.navigationTo(url);
-		super.waitPageLoaded();
+		super.navigationTo("");
+		super.waitPageIsLoaded();
 		QALogger.info("==============End: " + Thread.currentThread().getStackTrace()[1].getMethodName()+"======================");
 	}
 

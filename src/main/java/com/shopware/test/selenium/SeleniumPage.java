@@ -1,18 +1,16 @@
 package com.shopware.test.selenium;
 
-import java.net.URL;
+import java.time.Duration;
+import java.util.function.Function;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.shopware.test.utils.QALogger;
@@ -20,23 +18,42 @@ import com.shopware.test.utils.QALogger;
 public class SeleniumPage {
 	private static WebDriver driver;
 	private WebElement element;
-//	private static String DRIVERS_FOLDER = "/src/main/resources/DRIVERS";
 
-	public void browser(String browser) throws Exception {
+	public static void browser(String browser) throws Exception {
 		QALogger.info("Browser: " + browser);
-		driver = setUpBrowser(browser);
+		driver = DriverFactory.setUpBrowser(browser);
 	}
 
-	public void navigationTo(String URL) {
+	public static void navigationTo(String URL) {
 		QALogger.info("URL: " + URL);
 		driver.get(URL);
+		waitPageIsLoaded();
+	}
+	
+	
+	public void waitPageIsRedirecting(final String actualURL) {
+		QALogger.info("Redirect to: "+actualURL);
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+				.withTimeout(Duration.ofSeconds(60))
+				.pollingEvery(Duration.ofMillis(500));
+			    
+		wait.until(new Function<WebDriver, Boolean>() {
+			public Boolean apply(WebDriver t) {
+				String url = t.getCurrentUrl();
+				if (url.contains(actualURL)) {
+					return false;
+				}
+				return true;
+			}
+		});
+		waitPageIsLoaded();
 	}
 	
 	public void redirectTo(String URL) {
 		QALogger.info("Redirect to: "+URL);
 		WebDriverWait wait = new WebDriverWait(driver, 30);
 		wait.until(ExpectedConditions.urlContains(URL));
-		waitPageLoaded();
+		waitPageIsLoaded();
 	}
 	
 	public static void close() {
@@ -116,7 +133,7 @@ public class SeleniumPage {
 		}
 	}
 
-	public void waitPageLoaded() {
+	public static void waitPageIsLoaded() {
 		ExpectedCondition<Boolean> pageLoadCondition = new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
 				return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
@@ -134,58 +151,6 @@ public class SeleniumPage {
 	public void waitElementIsVisible(String locator, LocatorType locatorType) {
 		WebDriverWait wait = new WebDriverWait(driver, 30);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(Locator.get(locator, locatorType)));
-	}
- 
-//	public WebDriver setUpBrowser(Browser browser) {
-//		String address;
-//		
-//		if (isWindows()) {
-//			address = System.getProperty("user.dir") + DRIVERS_FOLDER;
-//		} else {
-//			address = "/usr/bin";
-//		}
-//		
-//		QALogger.info("Address: " + address);
-//		switch (browser) {
-//		case Firefox:
-//			System.setProperty("webdriver.gecko.driver", address + "/geckodriver.exe");
-//			return new FirefoxDriver();
-//		case Chrome:
-//			System.setProperty("webdriver.chrome.driver", address + "/chromedriver");
-//			return new ChromeDriver();
-//		default:
-//			return null;
-//		}
-//	}
-	
-	public WebDriver setUpBrowser(String browser) throws Exception {
-		DesiredCapabilities dc = null;
-		
-//		String address;
-//		
-//		if (isWindows()) {
-//			address = System.getProperty("user.dir") + DRIVERS_FOLDER;
-//		} else {
-//			address = "/usr/bin";
-//		}
-		
-		if (browser.equals("firefox")) {
-			dc = DesiredCapabilities.firefox();
-			return new RemoteWebDriver(new URL("http://172.17.0.4:5555/wd/hub"), dc);
-		} else if (browser.equals("chrome")) {
-			dc = DesiredCapabilities.chrome();
-			return new RemoteWebDriver(new URL("http://172.17.0.3:5555/wd/hub"), dc);
-		} else if (browser.equals("firefoxLoc")) {
-			System.setProperty("webdriver.gecko.driver", "geckodriver");
-			return new FirefoxDriver();
-		} else if (browser.equals("chromeLoc")) {
-			ChromeOptions options = new ChromeOptions();
-			options.addArguments("--start-maximized");
-			System.setProperty("webdriver.chrome.driver", "chromedriver");
-			return new ChromeDriver(options);
-		}
-		
-		return null;
 	}
 
 	public Boolean isWindows() {

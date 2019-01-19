@@ -1,14 +1,14 @@
 package com.shopware.test.pages;
 
-import com.shopware.test.base.ActionCustomer;
-import com.shopware.test.base.Address_UI;
-import com.shopware.test.base.CustomerPageConstansts;
-import com.shopware.test.base.Customer_UI;
+import com.shopware.test.pages.base.ActionCustomer;
+import com.shopware.test.pages.base.Address_UI;
+import com.shopware.test.pages.base.CustomerPageConstansts;
+import com.shopware.test.pages.base.Customer_UI;
 import com.shopware.test.selenium.LocatorType;
 import com.shopware.test.selenium.SeleniumPage;
 import com.shopware.test.utils.QALogger;
 
-public class CustomerPage extends SeleniumPage implements CustomerPageConstansts {
+public class CustomerRegisterPage extends SeleniumPage implements CustomerPageConstansts {
 	private Boolean isPass;
 	private static String FIRSTNAME_INPUT_ID = "firstname";
 	private static String LASTNAME_INPUT_ID = "lastname";

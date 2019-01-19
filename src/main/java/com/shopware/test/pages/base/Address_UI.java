@@ -1,4 +1,4 @@
-package com.shopware.test.base;
+package com.shopware.test.pages.base;
 
 import com.shopware.test.utils.DataUtils;
 
