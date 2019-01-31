@@ -15,9 +15,6 @@ import com.shopware.test.pages.CustomerRegisterPage;
 import com.shopware.test.pages.HomePage;
 import com.shopware.test.pages.base.ActionCustomer;
 import com.shopware.test.pages.base.Customer_UI;
-import com.shopware.test.pages.base.HomePageConstansts;
-import com.shopware.test.selenium.Browser;
-import com.shopware.test.selenium.SeleniumPage;
 import com.shopware.test.utils.QALogger;
 
 public class Test_03_SignIn_CustomerPage  extends TestBase {
@@ -28,26 +25,19 @@ public class Test_03_SignIn_CustomerPage  extends TestBase {
 	Customer_UI customerUI;
 	int customerId;
 	
-	@Test(priority = 1, description = "Launch home page and click sign in")
+	@Test(priority = 1, description = "Sign in and displays customer account page")
 	public void test01() {
-		try {
 			homePage.checkPageIsDisplay();
-			homePage.actionUser(ActionCustomer.SIGN_IN);
+			homePage.action(ActionCustomer.SIGN_IN);
 			homePage.redirectTo("#hide-registration");
 			assertTrue(customerPage.checkPageIsDisplay());
-		} catch (Exception e) {
-			QALogger.error("Failed", e);
-		}
+			
+			customerPage.signIn(customerUI);
+			customerPage.redirectTo("/account");
+			assertTrue(customerAccountPage.checkCustomerAccount());
+			assertTrue(customerAccountPage.checkProfileDashboard(customerUI));
 	}
 	
-	@Test(priority = 2, description = "Sign in and displays customer account page")
-	public void test02() {
-		customerPage.signIn(customerUI);
-		customerPage.redirectTo("/account");
-		assertTrue(customerAccountPage.checkCustomerAccount());
-		assertTrue(customerAccountPage.checkProfileDashboard(customerUI));
-	}
-
 	@BeforeClass
 	public void beforeClass() {
 		QALogger.setLog(this);

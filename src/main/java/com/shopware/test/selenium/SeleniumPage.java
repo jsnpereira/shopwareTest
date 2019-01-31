@@ -58,7 +58,7 @@ public class SeleniumPage {
 	
 	public static void close() {
 		QALogger.info("Browser closed");
-		driver.close();
+		driver.quit();
 	}
 	
 	public WebElement getElement(String locator, LocatorType locatorType) {
@@ -109,8 +109,8 @@ public class SeleniumPage {
 		return driver.getPageSource().contains(value);
 	}
 
-	public void Click(String locator, LocatorType locatorType) {
-		QALogger.info("Click locator: " + locator);
+	public void click(String locator, LocatorType locatorType) {
+		QALogger.info("click locator: " + locator);
 		element = getElement(locator, locatorType);
 		element.click();
 	}

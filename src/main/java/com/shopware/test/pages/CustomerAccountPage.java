@@ -14,6 +14,10 @@ public class CustomerAccountPage extends SeleniumPage implements CustomerAccount
 	private Boolean isPass;
 	private static String PROFILE_DASHBOARD_XPATH = ".//div[contains(@class,'account--info')]/div[1]/p";
 	private static String CHANGE_PROFILE_BUTTON_XPATH = ".//div[contains(@class,'account--info')]/div[2]/a";
+	private static String MY_ACCOUNT_BUTTON_XPATH ="//span[contains(@class,'navigation--personalized')]";
+	private static String MY_ACCOUNT_DROPDOWN_NAVIGATION_XPATH = "//div[contains(@class,'account--dropdown-navigation')]";
+	private static String LOGOUT_LINK_ON_NAVIGATION_XPATH =".//div[@class='account--dropdown-navigation']//a[contains(@class,'link--logout')]";
+	
 	
 	public Boolean checkCustomerAccount() {
 		QALogger.info("==============Start: " + Thread.currentThread().getStackTrace()[1].getMethodName()+"====================");
@@ -50,6 +54,9 @@ public class CustomerAccountPage extends SeleniumPage implements CustomerAccount
 		case CHANGE_PROFILE:
 			clickChangeProfile();
 			break;
+		case LOGOUT_USER_BY_NAVIGATION:
+			clickLogoutTheUserNavigation();
+			break;
 		default:
 			break;
 		}
@@ -57,7 +64,13 @@ public class CustomerAccountPage extends SeleniumPage implements CustomerAccount
 	}
 	
 	private void clickChangeProfile() {
-		super.Click(CHANGE_PROFILE_BUTTON_XPATH, LocatorType.XPATH);
+		super.click(CHANGE_PROFILE_BUTTON_XPATH, LocatorType.XPATH);
+	}
+	
+	private void clickLogoutTheUserNavigation() {
+		super.click(MY_ACCOUNT_BUTTON_XPATH, LocatorType.XPATH);
+		super.waitElementIsVisible(MY_ACCOUNT_DROPDOWN_NAVIGATION_XPATH, LocatorType.XPATH);
+		super.click(LOGOUT_LINK_ON_NAVIGATION_XPATH, LocatorType.XPATH);
 	}
 
 }

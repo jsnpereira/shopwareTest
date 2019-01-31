@@ -14,9 +14,6 @@ import com.shopware.test.pages.CustomerRegisterPage;
 import com.shopware.test.pages.HomePage;
 import com.shopware.test.pages.base.ActionCustomer;
 import com.shopware.test.pages.base.Customer_UI;
-import com.shopware.test.pages.base.HomePageConstansts;
-import com.shopware.test.selenium.Browser;
-import com.shopware.test.selenium.SeleniumPage;
 import com.shopware.test.utils.QALogger;
 
 public class Test_02_Create_Customer  extends TestBase {
@@ -26,31 +23,21 @@ public class Test_02_Create_Customer  extends TestBase {
 	ApiManagement api;
 	Customer_UI customerUI;
 
-	@Test(priority=1, description = "Launch home page")
+	@Test(priority=1, description = "Create customer")
 	public void test01() throws Exception {
 		AssertJUnit.assertTrue(homePage.checkPageIsDisplay());
-	}
-	
-	@Test(priority=2, description = "Go to customer page and register new customer")
-	public void test02()  {
-		homePage.actionUser(ActionCustomer.REGISTER);
+		
+		homePage.action(ActionCustomer.REGISTER);
 		homePage.redirectTo("#show-registration");
 		AssertJUnit.assertTrue(customerRegisterPage.checkPageIsDisplay());
+		
+		customerUI = new Customer_UI();
+		customerRegisterPage.enterTextBoxCustomerRegister(customerUI);
+		customerRegisterPage.action(ActionCustomer.REGISTER);
+		customerRegisterPage.redirectTo("/account");
+		AssertJUnit.assertTrue(customerAccountPage.checkCustomerAccount());
 	}
 	
-	@Test(priority=3, description = "Create new customer on page")
-	public void test03() {
-		try {
-			customerUI = new Customer_UI();
-			customerRegisterPage.enterTextBoxCustomerRegister(customerUI);
-			customerRegisterPage.action(ActionCustomer.REGISTER);
-			customerRegisterPage.redirectTo("/account");
-			AssertJUnit.assertTrue(customerAccountPage.checkCustomerAccount());
-		} catch (InterruptedException e) {
-			QALogger.error("Failed ", e);
-		}
-	}
-
 	@BeforeClass
 	public void beforeTest() {
 		QALogger.setLog(this);

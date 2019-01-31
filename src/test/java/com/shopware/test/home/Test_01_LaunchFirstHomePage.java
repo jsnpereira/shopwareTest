@@ -15,7 +15,7 @@ import com.shopware.test.utils.QALogger;
 public class Test_01_LaunchFirstHomePage extends TestBase {
 	HomePage homePage;
 
-	@Test(priority = 1, description = "Launch the Home page")
+	@Test(priority = 1, description = "Launch the first home page")
 	public void test01() {
 		try {
 			QALogger.info("Check page is displays");

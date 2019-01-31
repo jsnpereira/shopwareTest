@@ -52,22 +52,23 @@ public class CustomerRegisterPage extends SeleniumPage implements CustomerPageCo
 		super.Type(address.getZipCode(), ZIP_CODE_INPUT_ID, LocatorType.ID);
 		super.Type(address.getCity(), CITY_INPUT_ID, LocatorType.ID);
 		
-		super.Click(COUNTRY_DROPDOWN_XPATH, LocatorType.XPATH);
+		super.click(COUNTRY_DROPDOWN_XPATH, LocatorType.XPATH);
 		super.waitElementIsVisible(SELECT_UK_OPTION_DROPDOWN_XPATH, LocatorType.XPATH);
-		super.Click(SELECT_UK_OPTION_DROPDOWN_XPATH, LocatorType.XPATH);
+		super.click(SELECT_UK_OPTION_DROPDOWN_XPATH, LocatorType.XPATH);
 	}
 	
 	public void signIn(Customer_UI customer) {
+		super.waitElementIsVisible(USER_EMAIL_INPUT_ID, LocatorType.ID);
 		super.Type(customer.getEmail(), USER_EMAIL_INPUT_ID, LocatorType.ID);
 		super.Type(customer.getPassword(), USER_PWD_INPUT_ID, LocatorType.ID);
-		super.Click(SIGNIN_LOGIN_BUTTON_XPATH, LocatorType.XPATH);
+		super.click(SIGNIN_LOGIN_BUTTON_XPATH, LocatorType.XPATH);
 	}
 
 	public void action(ActionCustomer action) {
 		QALogger.info("Action customer: "+action.getActionName());
 		switch (action) {
 		case REGISTER:
-			super.Click(CONTINUE_BUTTON_XPATH, LocatorType.XPATH);
+			super.click(CONTINUE_BUTTON_XPATH, LocatorType.XPATH);
 			break;
 		default:
 			break;

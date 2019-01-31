@@ -15,10 +15,8 @@ import com.shopware.test.pages.CustomerRegisterPage;
 import com.shopware.test.pages.HomePage;
 import com.shopware.test.pages.ProfileEditPage;
 import com.shopware.test.pages.base.ActionCustomer;
+import com.shopware.test.pages.base.ActionValidate;
 import com.shopware.test.pages.base.Customer_UI;
-import com.shopware.test.pages.base.HomePageConstansts;
-import com.shopware.test.selenium.Browser;
-import com.shopware.test.selenium.SeleniumPage;
 import com.shopware.test.utils.QALogger;
 
 public class Test_04_Change_Names_Customer  extends TestBase {
@@ -30,47 +28,33 @@ public class Test_04_Change_Names_Customer  extends TestBase {
 	Customer_UI customerUI;
 	int customerId;
 	
-	@Test(priority = 1, description = "Launch home page and click sign in")
+	@Test(priority = 1, description = "Change customer names")
 	public void test01() {
-		try {
 			homePage.checkPageIsDisplay();
-			homePage.actionUser(ActionCustomer.SIGN_IN);
+			homePage.action(ActionCustomer.SIGN_IN);
 			homePage.redirectTo("#hide-registration");
 			assertTrue(customerRegisterPage.checkPageIsDisplay());
-		} catch (Exception e) {
-			QALogger.error("Failed", e);
-		}
+			
+			customerRegisterPage.signIn(customerUI);
+			customerRegisterPage.redirectTo("/account");
+			assertTrue(customerAccountPage.checkCustomerAccount());
+			
+			customerAccountPage.action(ActionCustomer.CHANGE_PROFILE);
+			customerAccountPage.redirectTo("/account/profile");
+			assertTrue(profileEditPage.checkPageIsDisplay());
+			
+			customerUI.setFirstName("John");
+			customerUI.setLastName("Lennon");
+			
+			profileEditPage.enterFieldsProfile(customerUI);
+			profileEditPage.action(ActionCustomer.SAVE_CHANGES_PROFILE);
+			assertTrue(profileEditPage.checkAlert(ActionValidate.SAVE_NAMES_ALERT,true));
+			
+			profileEditPage.action(ActionCustomer.CUSTOMER_ACCOUNT_LINK);
+			profileEditPage.waitPageIsRedirecting("/account/profile");
+			assertTrue(customerAccountPage.checkProfileDashboard(customerUI));
 	}
 	
-	@Test(priority = 2, description = "Sign in and displays customer account page")
-	public void test02() {
-		customerRegisterPage.signIn(customerUI);
-		customerRegisterPage.redirectTo("/account");
-		assertTrue(customerAccountPage.checkCustomerAccount());
-	}
-	
-	@Test(priority = 3, description = "Change first and last name and verify green alert")
-	public void test03() {
-		customerAccountPage.action(ActionCustomer.CHANGE_PROFILE);
-		customerAccountPage.redirectTo("/account/profile");
-		assertTrue(profileEditPage.checkPageIsDisplay());
-		
-		customerUI.setFirstName("John");
-		customerUI.setLastName("Lennon");
-		
-		profileEditPage.enterFieldsProfile(customerUI);
-		profileEditPage.action(ActionCustomer.SAVE_CHANGES_PROFILE);
-		assertTrue(profileEditPage.checkAlert(true));
-	}
-	
-	@Test(priority = 4, description = "Verify the names changed on dashboard")
-	public void test04() {
-		profileEditPage.action(ActionCustomer.CUSTOMER_ACCOUNT_LINK);
-		profileEditPage.waitPageIsRedirecting("/account/profile");
-		assertTrue(customerAccountPage.checkProfileDashboard(customerUI));
-	}
-	
-
 	@BeforeClass
 	public void beforeClass() {
 		QALogger.setLog(this);
