@@ -27,6 +27,7 @@ public class SeleniumPage {
 	public static void navigationTo(String URL) {
 		QALogger.info("URL: " + URL);
 		driver.get(URL);
+		driver.manage().window().maximize();
 		waitPageIsLoaded();
 	}
 	

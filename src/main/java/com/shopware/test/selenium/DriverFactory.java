@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -13,7 +14,9 @@ import com.shopware.test.utils.CommonUtils;
 import com.shopware.test.utils.QALogger;
 
 public class DriverFactory {
-	private static String SELENIUM_HUB_URL = "http://localhost:4444/wd/hub";
+	private static String PATH_HUB_URL = "/wd/hub";
+	private static String HTTP = "http://";
+	
 	private static DesiredCapabilities dc = null;
 	
 	
@@ -41,13 +44,19 @@ public class DriverFactory {
 	}
 	
 	private static WebDriver firefoxSetup() throws Exception {
+		FirefoxOptions options = new FirefoxOptions();
+		options.addArguments("-fullscreen");
 		dc = DesiredCapabilities.firefox();
-		return new RemoteWebDriver(new URL(SELENIUM_HUB_URL), dc);
+		dc.setCapability(FirefoxOptions.FIREFOX_OPTIONS, options);
+		return new RemoteWebDriver(new URL(setUpURL()), dc);
 	}
 	
 	private static WebDriver chromeSetup() throws Exception {
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--start-maximized");
 		dc = DesiredCapabilities.chrome();
-		return new RemoteWebDriver(new URL(SELENIUM_HUB_URL), dc);
+		dc.setCapability(ChromeOptions.CAPABILITY, options);
+		return new RemoteWebDriver(new URL(setUpURL()), dc);
 	}
 	
 	private static WebDriver firefoLocSetup() throws Exception {
@@ -60,6 +69,12 @@ public class DriverFactory {
 		options.addArguments("--start-maximized");
 		System.setProperty("webdriver.chrome.driver", "chromedriver");
 		return new ChromeDriver(options);
+	}
+	
+	private static String setUpURL() {
+		String grid_url = CommonUtils.getValueProperties("grid.url");
+		String grid_port = CommonUtils.getValueProperties("grid.port");
+		return HTTP + grid_url +":"+grid_port+ PATH_HUB_URL;
 	}
 
 }
