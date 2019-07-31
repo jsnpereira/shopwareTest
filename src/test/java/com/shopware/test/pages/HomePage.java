@@ -2,14 +2,11 @@ package com.shopware.test.pages;
 
 import com.shopware.test.pages.base.ActionCustomer;
 import com.shopware.test.pages.base.ActionValidate;
-import com.shopware.test.pages.base.HomePageConstansts;
 import com.shopware.test.selenium.LocatorType;
 import com.shopware.test.selenium.SeleniumPage;
 import com.shopware.test.utils.QALogger;
 
 public class HomePage extends SeleniumPage {
-	private Boolean isPass;
-
 	// Element
 	private String SEARCH_FIELD_NAME = "sSearch";
 	private String SUBMIT_SEARCH_ICON_CLASS = "main-search--button";
@@ -27,16 +24,8 @@ public class HomePage extends SeleniumPage {
 		QALogger.info("==============End: " + Thread.currentThread().getStackTrace()[1].getMethodName()+"======================");
 	}
 
-	public Boolean checkPageIsDisplay() {
-		QALogger.info("==============Start: " + Thread.currentThread().getStackTrace()[1].getMethodName()+"====================");
-		isPass = true;
-		String titleName = getBrowserTitle();
-		if (!titleName.equals(HomePageConstansts.TITLE_NAME_PAGE)) {
-			isPass = false;
-		}
-		QALogger.info("Tile: '"+titleName+"' => '"+HomePageConstansts.TITLE_NAME_PAGE+"', isPass: "+isPass);
-		QALogger.info("==============End: " + Thread.currentThread().getStackTrace()[1].getMethodName()+"======================");
-		return isPass;
+	public String getTitlePage() {
+		return getBrowserTitle();
 	}
 
 	public void action(ActionCustomer actionUser) {
@@ -73,21 +62,19 @@ public class HomePage extends SeleniumPage {
 		click(BACK_BUTTON_XPATH, LocatorType.XPATH);
 	}
 	
-	public Boolean verifyValidate(ActionValidate actionValidade) {
+	public String verifyValidate(ActionValidate actionValidade) {
 		switch (actionValidade) {
 		case SIGN_IN_INVALID:
-			return verifyRedNotifcation();
+			 return verifyRedNotifcation();
 		default:
 			System.out.println("Option ActionValidate invalid");
-			return false;
+			return "";
 		}
 	}
 	
-	private Boolean verifyRedNotifcation() {
-		isPass = true;
+	private String verifyRedNotifcation() {
 		waitElementIsVisible(SIGN_IN_INVALID_ALERT_CLASS, LocatorType.CLASS);
-		if (!verifyText(HomePageConstansts.SIGN_IN_INVALID_ALERT, SIGN_IN_INVALID_ALERT_CLASS,LocatorType.CLASS)) { isPass = false;}
-		return isPass;
+		return getText(SIGN_IN_INVALID_ALERT_CLASS,LocatorType.CLASS);
 	}
 
 	public void typeSearch(String search) {

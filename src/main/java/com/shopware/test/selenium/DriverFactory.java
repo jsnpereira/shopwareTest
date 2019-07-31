@@ -11,7 +11,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.shopware.test.utils.CommonUtils;
-import com.shopware.test.utils.QALogger;
 
 public class DriverFactory {
 	private static String PATH_HUB_URL = "/wd/hub";

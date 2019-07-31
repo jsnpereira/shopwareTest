@@ -16,25 +16,24 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.shopware.test.utils.QALogger;
 
 public class SeleniumPage {
-	private static WebDriver driver;
 	private WebElement element;
 
 	public static void browser(String browser) throws Exception {
 		QALogger.info("Browser: " + browser);
-		driver = DriverFactory.setUpBrowser(browser);
+		DriverManager.setDriver(DriverFactory.setUpBrowser(browser));
 	}
 
 	public static void navigationTo(String URL) {
 		QALogger.info("URL: " + URL);
-		driver.get(URL);
-		driver.manage().window().maximize();
+		DriverManager.getDriver().get(URL);
+		DriverManager.getDriver().manage().window().maximize();
 		waitPageIsLoaded();
 	}
 	
 	
 	public void waitPageIsRedirecting(final String actualURL) {
 		QALogger.info("Redirect to: "+actualURL);
-		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(DriverManager.getDriver())
 				.withTimeout(Duration.ofSeconds(60))
 				.pollingEvery(Duration.ofMillis(500));
 			    
@@ -52,19 +51,19 @@ public class SeleniumPage {
 	
 	public void redirectTo(String URL) {
 		QALogger.info("Redirect to: "+URL);
-		WebDriverWait wait = new WebDriverWait(driver, 30);
+		WebDriverWait wait = new WebDriverWait(DriverManager.getDriver(), 30);
 		wait.until(ExpectedConditions.urlContains(URL));
 		waitPageIsLoaded();
 	}
 	
 	public static void close() {
 		QALogger.info("Browser closed");
-		driver.quit();
+		DriverManager.getDriver().quit();
 	}
 	
 	public WebElement getElement(String locator, LocatorType locatorType) {
 		waitElementIslocated(locator, locatorType);
-		return driver.findElement(Locator.get(locator, locatorType));
+		return DriverManager.getDriver().findElement(Locator.get(locator, locatorType));
 	}
 	
 	public void Type(String value, String locator, LocatorType locatorType) {
@@ -104,10 +103,15 @@ public class SeleniumPage {
 		}
 		return false;
 	}
+	
+	public String getText(String locator, LocatorType locatorType) {
+		QALogger.info("Locator: " + locator);
+		return getElement(locator, locatorType).getText();
+	}
 
 	public boolean findText(String value) {
 		QALogger.info("Find text value: " + value);
-		return driver.getPageSource().contains(value);
+		return DriverManager.getDriver().getPageSource().contains(value);
 	}
 
 	public void click(String locator, LocatorType locatorType) {
@@ -122,12 +126,12 @@ public class SeleniumPage {
 	}
 	
 	public String getBrowserTitle() {
-		return driver.getTitle();
+		return DriverManager.getDriver().getTitle();
 	}
 
 	public Boolean isBrowserOpen() {
 		try {
-			driver.getCurrentUrl();// or driver.getTitle();
+			DriverManager.getDriver().getCurrentUrl();// or driver.getTitle();
 			return true;
 		} catch (Exception ex) {
 			return false;
@@ -140,17 +144,17 @@ public class SeleniumPage {
 				return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
 			}
 		};
-		WebDriverWait wait = new WebDriverWait(driver, 30);
+		WebDriverWait wait = new WebDriverWait(DriverManager.getDriver(), 30);
 		wait.until(pageLoadCondition);
 	}
 	
 	public void waitElementIslocated(String locator, LocatorType locatorType) {
-		WebDriverWait wait = new WebDriverWait(driver, 30);
+		WebDriverWait wait = new WebDriverWait(DriverManager.getDriver(), 30);
 		wait.until(ExpectedConditions.presenceOfElementLocated(Locator.get(locator, locatorType)));
 	}
 	
 	public void waitElementIsVisible(String locator, LocatorType locatorType) {
-		WebDriverWait wait = new WebDriverWait(driver, 30);
+		WebDriverWait wait = new WebDriverWait(DriverManager.getDriver(), 30);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(Locator.get(locator, locatorType)));
 	}
 

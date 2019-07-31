@@ -1,9 +1,8 @@
-package com.shopware.test.customer;
+package com.shopware.customer;
 
-import static org.testng.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.json.JSONObject;
-import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -16,11 +15,14 @@ import com.shopware.test.pages.HomePage;
 import com.shopware.test.pages.ProfileEditPage;
 import com.shopware.test.pages.base.ActionCustomer;
 import com.shopware.test.pages.base.ActionValidate;
+import com.shopware.test.pages.base.CustomerAccountPageConstants;
+import com.shopware.test.pages.base.CustomerPageConstansts;
 import com.shopware.test.pages.base.Customer_UI;
+import com.shopware.test.pages.base.HomePageConstansts;
 import com.shopware.test.utils.DataUtils;
 import com.shopware.test.utils.QALogger;
 
-public class Test_05_Change_Password extends TestBase {
+public class Test_04_Change_Names_Customer extends TestBase {
 	HomePage homePage;
 	CustomerRegisterPage customerRegisterPage;
 	CustomerAccountPage customerAccountPage;
@@ -28,45 +30,37 @@ public class Test_05_Change_Password extends TestBase {
 	ApiManagement api;
 	Customer_UI customerUI;
 	int customerId;
-	String oldPassword, newPassword;
 
-	@Test(priority = 1, description = "Change password and try sign in with new password")
+	@Test(priority = 1, description = "Change customer names")
 	public void test01() {
-		homePage.checkPageIsDisplay();
+		assertThat(homePage.getTitlePage()).isEqualTo(HomePageConstansts.TITLE_NAME_PAGE);
 		homePage.action(ActionCustomer.SIGN_IN);
 		homePage.redirectTo("#hide-registration");
-		assertTrue(customerRegisterPage.checkPageIsDisplay());
-		
+		assertThat(customerRegisterPage.getBrowserTitle()).isEqualTo(CustomerPageConstansts.TITLE_NAME_PAGE);
+
 		customerRegisterPage.signIn(customerUI);
 		customerRegisterPage.redirectTo("/account");
-		assertTrue(customerAccountPage.checkCustomerAccount());
-		
+		assertThat(customerAccountPage.getBrowserTitle()).isEqualTo(CustomerAccountPageConstants.TITLE_NAME_PAGE);
+
 		customerAccountPage.action(ActionCustomer.CHANGE_PROFILE);
 		customerAccountPage.redirectTo("/account/profile");
-		assertTrue(profileEditPage.checkPageIsDisplay());
+		profileEditPage.checkPageIsDisplay();
 
-		newPassword = "@bc" + DataUtils.randomString(5);
-		profileEditPage.enterChangePasswordFields(customerUI, newPassword);
-		profileEditPage.action(ActionCustomer.SAVE_CHANGES_PASSWORD);
-		assertTrue(profileEditPage.checkAlert(ActionValidate.SAVE_PASSWORD_ALERT, true));
-		
+		customerUI.setFirstName("John");
+		customerUI.setLastName("Lennon");
+
+		profileEditPage.enterFieldsProfile(customerUI);
+		profileEditPage.action(ActionCustomer.SAVE_CHANGES_PROFILE);
+		assertThat(ProfileEditPage.PROFILE_GREEN_ALERT_MESSAGE).isEqualTo(profileEditPage.checkAlert(ActionValidate.SAVE_NAMES_ALERT, true));
+	
 		profileEditPage.action(ActionCustomer.CUSTOMER_ACCOUNT_LINK);
 		profileEditPage.waitPageIsRedirecting("/account/profile");
-		customerAccountPage.action(ActionCustomer.LOGOUT_USER_BY_NAVIGATION);
-		customerAccountPage.redirectTo("/account/logout");
-		homePage.action(ActionCustomer.BACK_BUTTON_TO_HOME);
-		homePage.waitPageIsRedirecting("/account/logout");
 		
-		homePage.checkPageIsDisplay();
-		homePage.action(ActionCustomer.SIGN_IN);
-		homePage.redirectTo("#hide-registration");
-		customerRegisterPage.signIn(customerUI);
-		homePage.verifyValidate(ActionValidate.SIGN_IN_INVALID);
-		
-		customerUI.setPassword(newPassword);
-		customerRegisterPage.signIn(customerUI);
-		customerRegisterPage.redirectTo("/account");
-		assertTrue(customerAccountPage.checkCustomerAccount());
+		String names = DataUtils.capitalize(customerUI.getSalutation())+" "+customerUI.getFirstName()+" "+customerUI.getLastName();
+		String profile = customerAccountPage.checkProfileDashboard(ActionValidate.NAMES_PROFILE_DASHBOARD);
+		assertThat(profile).isEqualTo(names);
+		profile = customerAccountPage.checkProfileDashboard(ActionValidate.EMAIL_PROFILE_DASHBOARD);
+		assertThat(profile).isEqualTo(customerUI.getEmail());
 	}
 
 	@BeforeClass
@@ -83,7 +77,7 @@ public class Test_05_Change_Password extends TestBase {
 
 		JSONObject jCustomer = customerUI.converToJSON();
 		JSONObject jCustomerResult = api.postCustomer(jCustomer.toString());
-		AssertJUnit.assertTrue(api.getStatusCode().equals("201"));
+		assertThat(api.getStatusCode()).isEqualTo("201");
 		customerId = jCustomerResult.getJSONObject("data").getInt("id");
 	}
 
@@ -92,7 +86,7 @@ public class Test_05_Change_Password extends TestBase {
 		try {
 			api.deleteCustomer(String.valueOf(customerId));
 			QALogger.info("Status code: " + api.getStatusCode());
-			AssertJUnit.assertTrue(api.getStatusCode().equals("200"));
+			assertThat(api.getStatusCode()).isEqualTo("200");
 		} catch (Exception e) {
 			QALogger.error("Failed", e);
 		}

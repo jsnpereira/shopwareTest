@@ -1,7 +1,6 @@
 package com.shopware.test.base;
 
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -23,11 +22,6 @@ public class TestBase {
 
 	@AfterClass
 	public void postCondition() {
-		SeleniumPage.close();
-	}
-	
-	@AfterSuite
-	public void afterSuite() {
 		SeleniumPage.close();
 	}
 }

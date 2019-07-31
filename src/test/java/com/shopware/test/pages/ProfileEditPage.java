@@ -6,10 +6,8 @@ import com.shopware.test.pages.base.Customer_UI;
 import com.shopware.test.pages.base.ProfileEditConstants;
 import com.shopware.test.selenium.LocatorType;
 import com.shopware.test.selenium.SeleniumPage;
-import com.shopware.test.utils.QALogger;
 
 public class ProfileEditPage extends SeleniumPage implements ProfileEditConstants {
-	private Boolean isPass;
 	private String FIRST_NAME_FIELD_XPATH = ".//div[@class='profile--firstname']/input";
 	private String LAST_NAME_FIELD_XPATH = ".//div[@class='profile--lastname']/input";
 	private String PROFILE_SAVE_CHANGE_BUTTON_XPATH = ".//div[@class='profile--firstname']/../following-sibling::div/button";
@@ -21,18 +19,8 @@ public class ProfileEditPage extends SeleniumPage implements ProfileEditConstant
 	private String PASSWORD_GREEN_ALERT_XPATH =".//form[@name='passwordForm']//div[@class='alert--content']";
 	private String PASSWORD_SAVE_CHANGE_BUTTON_XPATH = ".//form[@name='passwordForm']//div[contains(@class,'panel--actions')]/button";
 
-	public Boolean checkPageIsDisplay() {
-		QALogger.info("==============Start: " + Thread.currentThread().getStackTrace()[1].getMethodName()
-				+ "====================");
-		isPass = true;
-		String titleName = getBrowserTitle();
-		if (!titleName.equals(TITLE_NAME_PAGE)) {
-			isPass = false;
-		}
-		QALogger.info("Tile name: '" + titleName + "' => '" + TITLE_NAME_PAGE + "', isPass: " + isPass);
-		QALogger.info("==============END: " + Thread.currentThread().getStackTrace()[1].getMethodName()
-				+ "======================");
-		return isPass;
+	public void checkPageIsDisplay() {
+//		assertThat(getBrowserTitle()).isEqualTo(TITLE_NAME_PAGE);
 	}
 
 	public void enterFieldsProfile(Customer_UI customerUI) {
@@ -66,47 +54,38 @@ public class ProfileEditPage extends SeleniumPage implements ProfileEditConstant
 		Type(confirmPassword, CONFIRM_PASSWORD_INPUT_XPATH, LocatorType.XPATH);
 	}
 
-	private Boolean namesGreenAlert() {
-		isPass = true;
+	private String namesGreenAlert() {
 		super.waitElementIsVisible(PROFILE_GREEN_ALERT_XPATH, LocatorType.XPATH);
-		if (!super.verifyText(PROFILE_GREEN_ALERT_MESSAGE, PROFILE_GREEN_ALERT_XPATH, LocatorType.XPATH)) {
-			isPass = false;
-		}
-		return isPass;
+		return getText(PROFILE_GREEN_ALERT_XPATH, LocatorType.XPATH);
 	}
 
-	private Boolean namesRedAlert() {
-		return true;
+	private String namesRedAlert() {
+		return "";
 	}
 
 	
-	private Boolean passwordGreenAlert() {
-		isPass = true;
-		super.waitElementIsVisible(PASSWORD_GREEN_ALERT_XPATH, LocatorType.XPATH);
-		if (!super.verifyText(PASSWORD_GREEN_ALERT_MESSAGE, PASSWORD_GREEN_ALERT_XPATH, LocatorType.XPATH)) {
-			isPass = false;
-		}
-		return isPass;
+	private String passwordGreenAlert() {
+		return getText(PASSWORD_GREEN_ALERT_XPATH, LocatorType.XPATH);
+//		assertThat(PASSWORD_GREEN_ALERT_MESSAGE).isEqualTo(getText(PASSWORD_GREEN_ALERT_XPATH, LocatorType.XPATH));
 	}
 
-	private Boolean passwordRedAlert() {
-		return true;
+	private String passwordRedAlert() {
+		return "";
 	}
 
 	
-	public Boolean checkAlert(ActionValidate actionValidate,Boolean isGreen) {
+	public String checkAlert(ActionValidate actionValidate,Boolean isGreen) {
 		switch (actionValidate) {
 		case SAVE_NAMES_ALERT:
 			return verifyNamesAlert(isGreen);
 		case SAVE_PASSWORD_ALERT:
 			return verifyPasswordAlert(isGreen);
 		default:
-			break;
+			return "";
 		}
-		return false;
 	}
 	
-	private Boolean verifyNamesAlert(Boolean isGreen) {
+	private String verifyNamesAlert(Boolean isGreen) {
 		if (isGreen) {
 			return namesGreenAlert();
 		} else {
@@ -114,7 +93,7 @@ public class ProfileEditPage extends SeleniumPage implements ProfileEditConstant
 		}
 	}
 
-	private Boolean verifyPasswordAlert(Boolean isGreen) {
+	private String verifyPasswordAlert(Boolean isGreen) {
 		if (isGreen) {
 			return passwordGreenAlert();
 		} else {

@@ -3,19 +3,19 @@ package com.shopware.test.selenium;
 import org.openqa.selenium.WebDriver;
 
 public class DriverManager {
-	private static final ThreadLocal<WebDriver> driver = new ThreadLocal<WebDriver>();
+	private static final ThreadLocal<WebDriver> driverMananger = new ThreadLocal<WebDriver>();
 	
 	public static void setDriver(WebDriver driver) {
-		DriverManager.driver.set(driver);
+		driverMananger.set(driver);
 	}
 	
 	public static WebDriver getDriver() {
-		return DriverManager.getDriver();
+		return driverMananger.get();
 	}
 	
 	
 	public static void quit() {
-		DriverManager.getDriver().quit();
+		driverMananger.get().quit();
 	}
 	
 

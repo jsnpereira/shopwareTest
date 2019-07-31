@@ -9,9 +9,8 @@ import com.shopware.test.selenium.SeleniumPage;
 import com.shopware.test.utils.QALogger;
 
 public class CustomerRegisterPage extends SeleniumPage implements CustomerPageConstansts {
-	private Boolean isPass;
 	private static String FIRSTNAME_INPUT_ID = "firstname";
-	private static String LASTNAME_INPUT_ID = "lastname";
+	private static String LASTNAME_INPUT_ID = "lastname";	
 	private static String EMAIL_INPUT_ID = "register_personal_email";
 	private static String PASSWORD_INPUT_ID = "register_personal_password";
 	private static String SALUTATION_DROPDOWN_FIELD_ID = "salutation";
@@ -27,16 +26,9 @@ public class CustomerRegisterPage extends SeleniumPage implements CustomerPageCo
 	private static String USER_PWD_INPUT_ID = "passwort";
 	private static String SIGNIN_LOGIN_BUTTON_XPATH =".//button[contains(@class,'register--login-btn')]";
 
-	public Boolean checkPageIsDisplay() {
-		QALogger.info("==============Start: " + Thread.currentThread().getStackTrace()[1].getMethodName()+"====================");
-		isPass = true;
-		String titleName = getBrowserTitle();
-		if (!titleName.equals(TITLE_NAME_PAGE)) {
-			isPass = false;
-		}
-		QALogger.info("Tile name: '" + titleName + "' => '" + TITLE_NAME_PAGE + "', isPass: " + isPass);
-		QALogger.info("==============END: " + Thread.currentThread().getStackTrace()[1].getMethodName()+"======================");
-		return isPass;
+	
+	public String getTitlePage() {
+		return getBrowserTitle();
 	}
 
 	public void enterTextBoxCustomerRegister(Customer_UI customer) throws InterruptedException {

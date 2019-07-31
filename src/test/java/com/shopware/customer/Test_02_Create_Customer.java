@@ -1,8 +1,9 @@
-package com.shopware.test.customer;
+package com.shopware.customer;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.testng.AssertJUnit;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -13,7 +14,10 @@ import com.shopware.test.pages.CustomerAccountPage;
 import com.shopware.test.pages.CustomerRegisterPage;
 import com.shopware.test.pages.HomePage;
 import com.shopware.test.pages.base.ActionCustomer;
+import com.shopware.test.pages.base.CustomerAccountPageConstants;
+import com.shopware.test.pages.base.CustomerPageConstansts;
 import com.shopware.test.pages.base.Customer_UI;
+import com.shopware.test.pages.base.HomePageConstansts;
 import com.shopware.test.utils.QALogger;
 
 public class Test_02_Create_Customer  extends TestBase {
@@ -25,17 +29,16 @@ public class Test_02_Create_Customer  extends TestBase {
 
 	@Test(priority=1, description = "Create customer")
 	public void test01() throws Exception {
-		AssertJUnit.assertTrue(homePage.checkPageIsDisplay());
+		assertThat(homePage.getTitlePage()).isEqualTo(HomePageConstansts.TITLE_NAME_PAGE);
 		
 		homePage.action(ActionCustomer.REGISTER);
 		homePage.redirectTo("#show-registration");
-		AssertJUnit.assertTrue(customerRegisterPage.checkPageIsDisplay());
+		assertThat(customerRegisterPage.getBrowserTitle()).isEqualTo(CustomerPageConstansts.TITLE_NAME_PAGE);
 		
-		customerUI = new Customer_UI();
 		customerRegisterPage.enterTextBoxCustomerRegister(customerUI);
 		customerRegisterPage.action(ActionCustomer.REGISTER);
 		customerRegisterPage.redirectTo("/account");
-		AssertJUnit.assertTrue(customerAccountPage.checkCustomerAccount());
+		assertThat(customerAccountPage.getBrowserTitle()).isEqualTo(CustomerAccountPageConstants.TITLE_NAME_PAGE);
 	}
 	
 	@BeforeClass
@@ -45,6 +48,7 @@ public class Test_02_Create_Customer  extends TestBase {
 		homePage = new HomePage();
 		customerRegisterPage = new CustomerRegisterPage();
 		customerAccountPage = new CustomerAccountPage();
+		customerUI = new Customer_UI();
 	}
 
 	@AfterClass
@@ -54,18 +58,24 @@ public class Test_02_Create_Customer  extends TestBase {
 			JSONObject json = api.getCustomerList();
 			JSONArray customers = json.getJSONArray("data");
 			int customerId = 0;
+			Boolean canDelete = false;
 			for (int i = 0; i < customers.length(); i++) {
 				JSONObject customer = (JSONObject) customers.get(i);
+				QALogger.info("Email: "+customer.getString("email"));
 				if (customer.getString("email").equals(customerUI.getEmail())) {
 					QALogger.info("Email: "+customer.getString("email"));
 					customerId = customer.getInt("id");
 					QALogger.info("Customer id was found: "+customerId);
+					canDelete =true;
 				}
 			}
 			
-			api.deleteCustomer(String.valueOf(customerId));
-			QALogger.info("Status code: "+api.getStatusCode());
-			AssertJUnit.assertTrue(api.getStatusCode().equals("200"));
+			if (canDelete) {
+				api.deleteCustomer(String.valueOf(customerId));
+				QALogger.info("Status code: "+api.getStatusCode());
+				assertThat(api.getStatusCode()).isEqualTo("200");
+			}
+			
 		} catch (Exception e) {
 			QALogger.error("FAIELD: ", e);
 		}
