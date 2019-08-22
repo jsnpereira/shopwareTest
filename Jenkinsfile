@@ -4,6 +4,10 @@ pipeline {
     parameters {
         choice(choices: ['chrome', 'firefox'], description: 'What browser?', name: 'pickBrowser')
     }
+    
+     tools {
+        maven 'apache-maven-3.3.9' 
+    }
 
     stages {
         stage('Build') {
