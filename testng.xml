@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Multi browser test" verbose="1" parallel="tests" thread-count="1">
+<suite name="Multi browser test" verbose="1" parallel="tests" thread-count="2">
 
- 	<test name="Chrome execution">
-		<parameter name="browser" value="chrome" />
+ 	<test name="Test suite execution">
 		<packages>
 			<package name="com.shopware.home" />
 			<package name="com.shopware.customer" />
 		</packages>
 	</test>    
- <!-- 
-	  <test name="Firefox Execution">
-		<parameter name="browser" value="firefox" />
-		<packages>
-			<package name="com.shopware.test.home" />
-			<package name="com.shopware.test.customer" />
-		</packages>
-	</test>   
- -->
 
 </suite> <!-- Suite -->
