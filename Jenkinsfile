@@ -11,7 +11,7 @@ pipeline {
              git(
      			  url: 'https://github.com/jsnpereira/shopwareTest.git',
        			  credentialsId: '5d840afb-760b-4c77-b1a2-7be3ef4206f6',
-       			  branch: "*/master"
+       			  branch: "master"
     			)
     			echo 'Start install'
                 sh 'mvn clean install -Dmaven.test.skip=true'
