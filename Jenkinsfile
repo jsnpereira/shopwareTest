@@ -22,7 +22,7 @@ pipeline {
             steps {
                 echo "You choose: ${params.pickBrowser}"
              	echo 'Testing..'
-                sh 'mvn install -DartifactId=testng -Dbrowser=${params.pickBrowser}'
+                sh 'mvn install -DartifactId=testng -Dbrowser=firefox'
             }
         }
         stage('publish') {
