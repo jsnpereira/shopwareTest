@@ -81,7 +81,7 @@ public class Test_04_Change_Names_Customer extends TestBase {
 		customerId = jCustomerResult.getJSONObject("data").getInt("id");
 	}
 
-	@AfterClass
+	@AfterClass(alwaysRun=true)
 	public void afterClass() {
 		try {
 			api.deleteCustomer(String.valueOf(customerId));

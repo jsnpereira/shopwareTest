@@ -23,14 +23,14 @@ public class Test_01_LaunchFirstHomePage extends TestBase {
 
 	@BeforeClass
 	public void beforeTest() {
-		QALogger.info("============================ Start: '" + this.getClass().getName() + "' ============================");
+		QALogger.info("Start: '" + this.getClass().getName() + "'");
 		homePage = new HomePage();
 	}
 
 	@AfterClass
 	public void afterTest() {
 		QALogger.info(
-				"============================ End: '" + this.getClass().getName() + "' ============================");
+				"End: '" + this.getClass().getName() + "'");
 	}
 
 }

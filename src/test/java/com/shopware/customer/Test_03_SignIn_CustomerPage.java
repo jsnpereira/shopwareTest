@@ -63,7 +63,7 @@ public class Test_03_SignIn_CustomerPage  extends TestBase {
 		customerId = jCustomerResult.getJSONObject("data").getInt("id");
 	}
 
-	@AfterClass
+	@AfterClass(alwaysRun=true)
 	public void afterClass() {
 		try {
 			api.deleteCustomer(String.valueOf(customerId));

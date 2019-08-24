@@ -9,11 +9,15 @@ import com.shopware.test.utils.CommonUtils;
 import com.shopware.test.utils.QALogger;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 
-public class ApiManagement implements APIManagementConstants {
+public class ApiManagement implements APIManagementCommons {
 	private static APIClient apiClient;
 	private String url;
 	
+//	private String AUTH_USER = System.getenv("api_user");
+//  private String AUTH_PWD= System.getenv("api_pwd");
+	
 	public JSONObject getCustomerList() {
+		System.out.println("Auth: '"+AUTH_USER+"' => '"+AUTH_PWD+"'");
 		apiClient = new APIClient();
 		url = CommonUtils.getValueProperties("url.base");
 		String path = url + PATH_API + PATH_CUSTOMER;
@@ -33,6 +37,7 @@ public class ApiManagement implements APIManagementConstants {
 	
 	public JSONObject postCustomer(String body) {
 		apiClient = new APIClient();
+		System.out.println("Auth: '"+AUTH_USER+"' => '"+AUTH_PWD+"'");
 		url = CommonUtils.getValueProperties("url.base");
 		String path = url + PATH_API + PATH_CUSTOMER;
 		QALogger.info("Body: "+body);

@@ -51,7 +51,7 @@ public class Test_02_Create_Customer  extends TestBase {
 		customerUI = new Customer_UI();
 	}
 
-	@AfterClass
+	@AfterClass(alwaysRun=true)
 	public void afterTest() {
 		try {
 			api = new ApiManagement();
