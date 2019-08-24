@@ -13,6 +13,9 @@ pipeline {
        			  credentialsId: '5d840afb-760b-4c77-b1a2-7be3ef4206f6',
        			  branch: "master"
     			)
+    			script {
+                    env.BROWSER = "${params.pickBrowser}"
+                }
     			echo 'Start install'
                 sh 'mvn clean install -Dmaven.test.skip=true'
             }
@@ -20,9 +23,9 @@ pipeline {
         stage('Test') {
         	
             steps {
-                echo "You choose: ${params.pickBrowser}"
+                echo "You choose: ${env.BROWSER}"
              	echo 'Testing..'
-                sh 'mvn install -DartifactId=testng -Dbrowser="${params.pickBrowser}"'
+                sh 'mvn install -DartifactId=testng -Dbrowser="${env.BROWSER}"'
             }
         }
         stage('publish') {
