@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     parameters {
         choice(choices: ['chrome', 'firefox'], description: 'What browser?', name: 'pickBrowser')
     }
@@ -16,18 +16,17 @@ pipeline {
     			script{
              		env.BROWSER = '${params.pickBrowser}'
             	}
+            	echo 'Environment: ' ${env.BROWSER}
     			echo 'Start install'
                 sh 'mvn clean install -Dmaven.test.skip=true'
             }
         }
         stage('Test') {
-        	
+
             steps {
-            	echo 'Environment: ${env.BROWSER}'
-            	echo 'Params: ${params.pickBrowser}'
-            	echo 'Params 2: ${pickBrowser} '
-                echo 'Testing..'
-                sh 'mvn install -DartifactId=testng -Dbrowser="${env.BROWSER}"'
+                 echo 'Testing..'
+                echo 'Environment: ' ${env.BROWSER}
+               	sh 'mvn install -DartifactId=testng -Dbrowser=${env.BROWSER}'
             }
         }
         stage('publish') {

@@ -20,7 +20,7 @@ public class TestBase {
 		SeleniumPage.navigationTo(CommonUtils.getValueProperties("url.base"));
 	}
 
-	@AfterClass(alwaysRun=true)
+	@AfterClass(alwaysRun = true)
 	public void postCondition() {
 		SeleniumPage.close();
 	}
