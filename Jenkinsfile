@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+             image 'maven:3-alpine'
+             args '-v $HOME/.m2:/root/.m2'
+        }
+    }
 
     parameters {
         choice(choices: ['chrome', 'firefox'], description: 'What browser?', name: 'pickBrowser')
@@ -12,21 +17,19 @@ pipeline {
      			  url: 'https://github.com/jsnpereira/shopwareTest.git',
        			  credentialsId: '5d840afb-760b-4c77-b1a2-7be3ef4206f6',
        			  branch: "master"
-    			)
-    			script{
-             		env.BROWSER = '${params.pickBrowser}'
-            	}
-            	echo 'Environment: ' ${env.BROWSER}
-    			echo 'Start install'
-                sh 'mvn clean install -Dmaven.test.skip=true'
-            }
+    			   )
+
+            echo 'Environment: ${params.pickBrowser}'
+    			  echo 'Start install'
+            sh 'mvn clean install -Dmaven.test.skip=true'
+          }
         }
         stage('Test') {
 
             steps {
                  echo 'Testing..'
-                echo 'Environment: ' ${env.BROWSER}
-               	sh 'mvn install -DartifactId=testng -Dbrowser=${env.BROWSER}'
+                echo 'Environment: ${params.pickBrowser}'
+               	sh 'mvn install -DartifactId=testng -Dbrowser=$${params.pickBrowser}'
             }
         }
         stage('publish') {
